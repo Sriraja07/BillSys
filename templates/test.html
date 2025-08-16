@@ -1,0 +1,24 @@
+function printInvoice() {
+  const printContent = document.getElementById('invoiceContent');
+
+  // Remove all Tailwind print:* and not-print:* classes
+  const allElements = printContent.querySelectorAll('*');
+  allElements.forEach(el => {
+      el.classList.forEach(cls => {
+          if (cls.startsWith('print:') || cls.startsWith('not-print:')) {
+              el.classList.remove(cls);
+          }
+      });
+  });
+
+  // Clone the cleaned content for printing
+  const contentToPrint = printContent.innerHTML;
+  const originalContent = document.body.innerHTML;
+
+  document.body.innerHTML = contentToPrint;
+  window.print();
+  document.body.innerHTML = originalContent;
+
+  // Optional: Reload the page to restore any dynamic functionality
+  // location.reload();
+}

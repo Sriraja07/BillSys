@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Electrical Billing Software{% endblock %}</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/output.css')}}">
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+</head>
+<body class="bg-gray-100 not-print:border-t-1 border-gray-200 shadow-sm overflow-hidden">
+    {% if current_user.is_authenticated %}
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 fixed h-full overflow-y-auto border-r-2 border-gray-200 bg-white text-gray-700 pb-3">
+            <!-- Logo -->
+            <div class="p-5 border-b-2 border-gray-200">
+                <div class="flex items-center text-blue-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                        <path fill-rule="evenodd" d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z" clip-rule="evenodd" />
+                    </svg>
+                    <h1 class="px-2 text-xl font-medium font-serif">Electrical Billing</h1> 
+                </div>
+            </div>
+            <!-- Navigation Menu -->
+            <nav class="mt-4">
+                <ul class="space-y-1">
+                    <li class="p-1">
+                        <a href="{{ url_for('dashboard') }}" class="flex items-center px-5 py-2 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'dashboard' %} font-medium text-lg text-blue-700 border-r-4 border-blue-700{% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-3">
+                                <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                                <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <!-- Inventory Dropdown -->
+                    <li class="p-1">
+                        <div class="group">
+                            <button class="flex items-center justify-between w-full px-5 py-2 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['products', 'add_product', 'edit_product','stock_management'] %}font-medium text-blue-700{% endif %}">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3" />
+                                    </svg>                                     
+                                    Inventory
+                                </div>
+                                <svg id="arrow" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <ul class="overflow-hidden hidden">
+                                <li class="p-1">
+                                    <a href="{{ url_for('products') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['products', 'add_product', 'edit_product'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">Products</a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('stock_management') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'stock_management' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">Stock Management</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <!-- Sales Dropdown -->
+                    <li class="p-1">
+                        <div class="group">
+                            <button class="flex items-center justify-between w-full px-5 py-2 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['customers', 'add_customer', 'edit_customer', 'customer_detail','sales', 'sales_detail','pos_billing'] %}font-medium text-blue-700{% endif %}">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                    </svg>                                                                          
+                                    Sales
+                                </div>
+                                <svg id="arrow" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <ul class="overflow-hidden hidden">
+                                <li class="p-1">
+                                    <a href="{{ url_for('customers') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['customers', 'add_customer', 'edit_customer', 'customer_detail'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        Customers
+                                    </a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('sales') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['sales', 'sales_detail'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        Sales Orders
+                                    </a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('pos_billing') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'pos_billing' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">                                         
+                                        POS Billing
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <!-- Purchase Dropdown -->
+                    <li class="p-1">
+                        <div class="group">
+                            <button class="flex items-center justify-between w-full px-5 py-2 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['vendors', 'add_vendor', 'edit_vendor', 'vendor_detail','purchases', 'purchase_detail','purchase_billing'] %}font-medium text-blue-700{% endif %}">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+                                      </svg>                                                                                                         
+                                    Purchase
+                                </div>
+                                <svg id="arrow" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <ul class="overflow-hidden hidden">
+                                <li class="p-1">
+                                    <a href="{{ url_for('vendors') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md transition-colors {% if request.endpoint in ['vendors', 'add_vendor', 'edit_vendor', 'vendor_detail'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">                                     
+                                        Vendors
+                                    </a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('purchases') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md transition-colors {% if request.endpoint in ['purchases', 'purchase_detail'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        Purchases Orders
+                                    </a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('add_purchase') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md transition-colors {% if request.endpoint in ['add_purchase'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        Add Purchase Bill
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="p-1">
+                        <a href="{{ url_for('payments') }}" class="flex items-center px-5 py-2 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['payments'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                              </svg>                              
+                            Payments
+                        </a>
+                    </li>
+                    <li class="p-1">
+                        <a href="{{ url_for('expenses') }}" class="flex items-center px-5 py-2 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['expenses', 'add_expense'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z" />
+                              </svg>                              
+                            Expenses
+                        </a>
+                    </li>
+                    <!-- Reports Dropdown -->
+                    <li class="p-1">
+                        <div class="group">
+                            <button class="flex items-center justify-between w-full px-5 py-2 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['gst_report','sales_report','payment_report'] %}font-medium text-blue-700{% endif %}">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+                                      </svg>                                      
+                                    Reports
+                                </div>
+                                <svg id="arrow" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <ul class=" overflow-hidden hidden">
+                                <li class="p-1">
+                                    <a href="{{ url_for('sales_report') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint =='sales_report' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        Sales Report
+                                    </a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('payment_report') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint =='payment_report' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        Payment Report
+                                    </a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('gst_report') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'gst_report' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        GST Report
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    {% if current_user.role in ['admin', 'owner'] %}
+                    <!-- Admin Section -->
+                    <li class="p-1">
+                        <div class="group">
+                            <button class="flex items-center justify-between w-full px-5 py-2 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in['admin_users','admin_settings','manage_passwords'] %}font-medium text-blue-700{% endif %}">
+                                <div class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+                                      </svg>
+                                    Administration
+                                </div>
+                                <svg id="arrow" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <ul class="overflow-hidden hidden">
+                                <li class="p-1">
+                                    <a href="{{ url_for('admin_users') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'admin_users' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        User Management
+                                    </a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('manage_passwords') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'manage_passwords' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        Manage Passwords
+                                    </a>
+                                </li>
+                                <li class="p-1">
+                                    <a href="{{ url_for('admin_settings') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'admin_settings' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
+                                        Settings
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 ml-64 overflow-hidden mb-3">
+            <!-- Top Bar -->
+            <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">
+                        {% block page_title %}{% endblock %}
+                    </h2>
+                    <div class="flex items-center space-x-4">
+                        <!-- User Dropdown -->
+                        <div class="relative group">
+                            <button class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-sm font-medium">{{ current_user.name }}</p>
+                                    <p class="text-xs text-gray-500">{{ current_user.role.upper() }}</p>
+                                </div>
+                                <svg class="w-4 h-4 transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20" id="arrow">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <div class="absolute right-0 w-40 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+                                <button onclick="openProfileModal()" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+                                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                    </svg>
+                                    User Profile
+                                </button>
+                                <a href="{{ url_for('logout') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="overflow-y-auto h-full" style="padding-bottom: 60px;">
+                <div class="p-6">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Flash Messages -->
+    {% if current_user.is_authenticated %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} mb-4 p-4 rounded-md shadow-lg {% if category == 'error' %}bg-red-100 text-red-700 border border-red-300{% else %}bg-green-100 text-green-700 border border-green-300{% endif %}">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    {% if category == 'error' %}
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                    {% else %}
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    {% endif %}
+                                </svg>
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-gray-300/75 hidden overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">User Profile</h3>
+                    <button onclick="closeProfileModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Name</label>
+                        <p class="text-sm text-gray-900">{{ current_user.name }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Mobile Number</label>
+                        <p class="text-sm text-gray-900">{{ current_user.mobile_number }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Role</label>
+                        <p class="text-sm text-gray-900">{{ current_user.role.upper() }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Member Since</label>
+                        <p class="text-sm text-gray-900">{{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const dropdownButtons = document.querySelectorAll('.group button');
+            
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const dropdown = this.parentElement;
+                    const menu = dropdown.querySelector('ul');
+                    
+                    if (menu) {
+                        const isOpen = !menu.classList.contains('hidden');
+                        
+                        // Close all other dropdowns
+                        document.querySelectorAll('.group ul').forEach(otherMenu => {
+                            if (otherMenu !== menu) {
+                                otherMenu.classList.add('hidden');
+                            }
+                        });
+                        
+                        // Toggle current dropdown
+                        if (isOpen) {
+                            menu.classList.add('hidden');
+                        } else {
+                            menu.classList.remove('hidden');
+                        }
+                    }
+                });
+            });
+
+            // Auto-expand active dropdown
+            const activeLinks = document.querySelectorAll('.border-r-4');
+            activeLinks.forEach(link => {
+                const parentGroup = link.closest('.group');
+                if (parentGroup) {
+                    const menu = parentGroup.querySelector('ul');
+                    const chevron = parentGroup.querySelector('#arrow');
+                    if (menu && chevron) {
+                        menu.classList.remove('hidden');
+                        chevron.classList.add('rotate-180');
+                    }
+                }
+            });
+
+            // Auto-hide flash messages
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    alert.style.transition = 'opacity 0.5s';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                });
+            }, 5000);
+        });
+
+        function openProfileModal() {
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const profileModal = document.getElementById('profileModal');
+            if (event.target === profileModal) {
+                closeProfileModal();
+            }
+        }
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

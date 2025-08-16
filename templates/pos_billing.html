@@ -1,0 +1,909 @@
+{% extends "base.html" %}
+
+{% block title %}POS Billing - Electrical Billing Software{% endblock %}
+{% block page_title %}Sales{% endblock %}
+
+{% block content %}
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Product Selection Panel - Reduced Size -->
+    <div class="lg:col-span-2 md:col-span-2 space-y-6">
+        <!-- Search and Filters -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1">
+                    <input 
+                        type="text" 
+                        id="productSearch" 
+                        placeholder="Search products..." 
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                </div>
+                <select id="categoryFilter" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat }}" {% if cat == category %}selected{% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Select Products</h3>
+            
+            <!-- Product Count Info -->
+            <div class="mb-3 text-sm text-gray-600">
+                Showing <span id="productCount">{{ products|length }}</span> products
+            </div>
+            
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                <!-- Products will be populated by JavaScript -->
+            </div>
+            
+            <!-- Pagination Controls -->
+            <div id="paginationControls" class="mt-4 flex justify-center items-center space-x-2">
+                <button id="prevPage" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 text-sm" disabled>
+                    ← Previous
+                </button>
+                <span id="pageInfo" class="px-3 py-1 text-sm text-gray-700">Page 1 of 1</span>
+                <button id="nextPage" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 text-sm" disabled>
+                    Next →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Panel - Enlarged -->
+    <div class="lg:col-span-2 md:col-span-2 space-y-6">
+        <!-- Customer Selection -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Customer Details</h3>
+            <input id="testBill" class="hidden" value="{{bill_no}}">
+            <div class="space-y-3">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="customerSearch" 
+                        placeholder="Search customer by mobile number or name..."
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        autocomplete="off"
+                    >
+                    <div id="customerDropdown" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto hidden">
+                        <div class="p-2 hover:bg-gray-100 cursor-pointer border-b" data-customer-id="" data-customer-name="Walk-in Customer" data-customer-mobile="">
+                            <div class="font-medium">Walk-in Customer</div>
+                            <div class="text-sm text-gray-500">No customer details</div>
+                        </div>
+                        {% for customer in customers %}
+                        <div class="p-2 hover:bg-gray-100 cursor-pointer border-b customer-option" 
+                             data-customer-id="{{ customer.id }}" 
+                             data-customer-name="{{ customer.name }}" 
+                             data-customer-mobile="{{ customer.mobile_number }}"
+                             data-search-text="{{ customer.name.lower() }} {{ customer.mobile_number }}">
+                            <div class="font-medium">{{ customer.name }}</div>
+                            <div class="text-sm text-gray-500">{{ customer.mobile_number }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div id="selectedCustomer" class="hidden bg-blue-50 border border-blue-200 rounded-md p-3">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-medium text-blue-900" id="selectedCustomerName"></div>
+                            <div class="text-sm text-blue-700" id="selectedCustomerMobile"></div>
+                        </div>
+                        <button onclick="clearCustomerSelection()" class="text-blue-600 hover:text-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                              </svg>
+                              
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" id="customerSelect" value="">
+                <button id="addCustomerBtn" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 py-2 rounded-md transition-colors text-sm flex justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 24 24" fill="currentColor" class="size-5 mr-1">
+                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                      </svg>
+                      Quick Add Customer
+                </button>
+            </div>
+        </div>
+
+        <!-- Invoice Items -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Invoice Items</h3>
+                <button id="clearCart" class="text-red-600 hover:text-red-800 text-sm flex cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-1">
+                        <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                      </svg>
+                      </i>Clear All
+                </button>
+            </div>
+            
+            <div id="cartItems" class="space-y-3 mb-4 max-h-64 overflow-y-auto">
+                <!-- Cart items will be populated by JavaScript -->
+            </div>
+
+            <!-- Totals -->
+            <div class="border-t pt-4 space-y-2">
+                <div class="flex justify-between text-sm">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">₹0.00</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span>Discount(Eligible: <span id="eligibleDiscount"></span>)</span>
+                    <div class="flex items-center space-x-2">
+                        <span>₹</span>
+                        <input type="number" id="discountAmount" min="0" step="0.01" placeholder="0.00" 
+                            class="w-20 border border-gray-300 rounded px-2 py-1 text-xs text-right">
+                    </div>
+                </div>
+                <div class="flex justify-between text-sm items-center">
+                    <div class="flex items-center space-x-2">
+                        <span>CGST:</span>
+                        <input type="number" id="cgstRate" min="0" max="50" step="0.25"
+                               class="w-16 border border-gray-300 rounded px-2 py-1 text-xs text-right" 
+                               onchange="calculateTotals()" value="9">
+                        <span>%</span>
+                    </div>
+                    <span id="cgstAmount" class="text-sm">₹0.00</span>
+                </div>
+                <div class="flex justify-between text-sm items-center">
+                    <div class="flex items-center space-x-2">
+                        <span>SGST:</span>
+                        <input type="number" id="sgstRate" min="0" max="50" step="0.25" placeholder="%" 
+                               class="w-16 border border-gray-300 rounded px-2 py-1 text-xs text-right" 
+                               onchange="calculateTotals()" value="9">
+                        <span>%</span>
+                    </div>
+                    <span id="sgstAmount" class="text-sm">₹0.00</span>
+                </div>
+                <div class="flex justify-between font-bold text-lg border-t pt-2">
+                    <span>Total:</span>
+                    <span id="finalTotal">₹0.00</span>
+                </div>
+            </div>
+            <div class="p-1 flex m-1">
+                <input type="checkbox" id="billQuotation">
+                <label for="billQuotation" class="text-lg font-medium px-2">Quotation</label>
+            </div>
+            <button onclick="getReadyPrint()" id="printInvoice" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 m-1 rounded-md transition-colors text-sm flex justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-1">
+                    <path fill-rule="evenodd" d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H18a.75.75 0 0 1-.75-.75V10.5ZM15 9.75a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V10.5a.75.75 0 0 0-.75-.75H15Z" clip-rule="evenodd" />
+                  </svg>
+                  Print Invoice
+            </button>
+
+            <!-- Payment Section -->
+            <div class="mt-4 space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                    <select id="paymentMethod" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                        <option value="upi">UPI</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Payment Amount</label>
+                    <div class="flex space-x-2">
+                        <input type="number" id="paymentAmount" step="0.01" placeholder="Amount received..." 
+                               class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="setFullAmount()" class="bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded-md text-sm">
+                            Full
+                        </button>
+                    </div>
+                    <div id="changeAmount" class="text-sm text-green-600 mt-1 hidden">
+                        Change: ₹<span id="changeValue">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="mt-6 space-y-3">
+                <button id="generateInvoice" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-md transition-colors font-medium flex justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 24 24" fill="currentColor" class="size-5 mr-1">
+                        <path fill-rule="evenodd" d="M3.75 3.375c0-1.036.84-1.875 1.875-1.875H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375Zm10.5 1.875a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Zm-4.5 5.25a.75.75 0 0 0 0 1.5h.375c.769 0 1.43.463 1.719 1.125H9.75a.75.75 0 0 0 0 1.5h2.094a1.875 1.875 0 0 1-1.719 1.125H9.75a.75.75 0 0 0-.53 1.28l2.25 2.25a.75.75 0 0 0 1.06-1.06l-1.193-1.194a3.382 3.382 0 0 0 2.08-2.401h.833a.75.75 0 0 0 0-1.5h-.834A3.357 3.357 0 0 0 12.932 12h1.318a.75.75 0 0 0 0-1.5H10.5c-.04 0-.08.003-.12.01a3.425 3.425 0 0 0-.255-.01H9.75Z" clip-rule="evenodd" />
+                      </svg>
+                      Add Sales
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Add Customer Modal -->
+<div id="customerModal" class="fixed inset-0 bg-gray-600/75 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Add Customer</h3>
+                <form id="quickCustomerForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                        <input type="text" id="customerName" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mobile Number *</label>
+                        <input type="tel" id="customerMobile" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="customerEmail" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </form>
+            </div>
+            <div class="bg-gray-50 px-6 py-3 flex justify-end space-x-3">
+                <button onclick="closeCustomerModal()" class="bg-white text-gray-700 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="saveCustomer()" class="bg-blue-600 text-white rounded-md px-4 py-2 hover:bg-blue-700">
+                    Add Customer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Invoice Print Modal -->
+<div id="invoiceModal" class="fixed inset-0 bg-gray-600/75 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Invoice Preview</h3>
+                    <button onclick="closeInvoiceModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                          </svg>                          
+                    </button>
+                </div>
+                <div id="invoiceContent" class="border border-gray-300 p-6">
+                    <!-- Invoice content will be populated here -->
+                </div>
+            </div>
+            <div class="bg-gray-50 px-6 py-3 flex justify-end space-x-3 mb-3">
+                <button onclick="printInvoice()" class="bg-blue-600 text-white rounded-md px-4 py-2 hover:bg-blue-700 flex justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 24 24" fill="currentColor" class="size-5 mr-1">
+                        <path fill-rule="evenodd" d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 0 0 3 3h.27l-.155 1.705A1.875 1.875 0 0 0 7.232 22.5h9.536a1.875 1.875 0 0 0 1.867-2.045l-.155-1.705h.27a3 3 0 0 0 3-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0 0 18 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25ZM16.5 6.205v-2.83A.375.375 0 0 0 16.125 3h-8.25a.375.375 0 0 0-.375.375v2.83a49.353 49.353 0 0 1 9 0Zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 0 1-.374.409H7.232a.375.375 0 0 1-.374-.409l.526-5.784a.373.373 0 0 1 .333-.337 41.741 41.741 0 0 1 8.566 0Zm.967-3.97a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H18a.75.75 0 0 1-.75-.75V10.5ZM15 9.75a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V10.5a.75.75 0 0 0-.75-.75H15Z" clip-rule="evenodd" />
+                      </svg>
+                      Print
+                </button>
+                <button onclick="closeInvoiceModal()" class="bg-gray-300 text-gray-700 rounded-md px-4 py-2 hover:bg-gray-400">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let cart = [];
+let currentInvoice = null;
+
+// Pagination variables
+let allProducts = [];
+let currentPage = 1;
+const productsPerPage = 20;
+
+// Load products data from server
+document.addEventListener('DOMContentLoaded', function() {
+    // Get products data from template
+    const productsData = `{{ products_json|tojson|safe }}`;
+    try {
+        allProducts = JSON.parse(productsData);
+    } catch(e) {
+        console.error('Error parsing products data:', e);
+        allProducts = [];
+    }
+    
+    displayProducts();
+    updatePaginationControls();
+});
+
+// Product search and filter
+document.getElementById('productSearch').addEventListener('input', filterAndDisplay);
+document.getElementById('categoryFilter').addEventListener('change', filterAndDisplay);
+
+function filterAndDisplay() {
+    currentPage = 1;
+    displayProducts();
+    updatePaginationControls();
+}
+
+function getFilteredProducts() {
+    const search = document.getElementById('productSearch').value.toLowerCase();
+    const category = document.getElementById('categoryFilter').value;
+    
+    return allProducts.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(search);
+        const matchesCategory = !category || product.category === category;
+        return matchesSearch && matchesCategory;
+    });
+}
+
+function displayProducts() {
+    const filteredProducts = getFilteredProducts();
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    const productsToShow = filteredProducts.slice(startIndex, endIndex);
+    
+    const productsGrid = document.getElementById('productsGrid');
+    productsGrid.innerHTML = '';
+    
+    productsToShow.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card border border-gray-200 rounded-lg p-3 hover:border-blue-300 transition-colors cursor-pointer';
+        productCard.dataset.productId = product.id;
+        productCard.dataset.name = product.name;
+        productCard.dataset.brand=product.brand;
+        productCard.dataset.price = product.selling_price;
+        productCard.dataset.gst = product.gst_rate;
+        productCard.dataset.stock = product.stock_quantity;
+        productCard.dataset.category = product.category;
+        productCard.dataset.cp = product.cost_price;
+        
+        const stockClass = product.stock_quantity <= 5 ? 'text-red-600' : 
+                          product.stock_quantity <= 20 ? 'text-yellow-600' : 'text-green-600';
+        
+        productCard.innerHTML = `
+            <div class="flex justify-between items-start mb-1">
+                <h4 class="font-medium text-gray-900 text-xs">${product.name.length > 20 ? product.name.substring(0, 20) + '...' : product.name}</h4>
+                <span class="text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded">${product.category.substring(0, 3)}</span>
+            </div>
+            <p class="text-xs text-gray-500 mb-1">${product.brand.length > 15 ? product.brand.substring(0, 15) + '...' : product.brand}</p>
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="font-bold text-green-600 text-sm">₹${Math.round(product.selling_price).toLocaleString()}</p>
+                    <p class="text-xs text-gray-500">${product.gst_rate}%</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-medium text-xs ${stockClass}">
+                        Stock:${product.stock_quantity}
+                    </p>
+                    <p class="text-xs text-gray-500">CP:₹${product.cost_price}</p>
+                </div>
+            </div>
+        `;
+        
+        productCard.addEventListener('click', () => addToCart(productCard));
+        productsGrid.appendChild(productCard);
+    });
+    
+    // Update product count
+    document.getElementById('productCount').textContent = filteredProducts.length;
+}
+
+function updatePaginationControls() {
+    const filteredProducts = getFilteredProducts();
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+    
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
+}
+
+// Pagination event listeners
+document.getElementById('prevPage').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        displayProducts();
+        updatePaginationControls();
+    }
+});
+
+document.getElementById('nextPage').addEventListener('click', () => {
+    const filteredProducts = getFilteredProducts();
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+    if (currentPage < totalPages) {
+        currentPage++;
+        displayProducts();
+        updatePaginationControls();
+    }
+});
+
+// Customer search functionality
+const customerSearch = document.getElementById('customerSearch');
+const customerDropdown = document.getElementById('customerDropdown');
+const selectedCustomerDiv = document.getElementById('selectedCustomer');
+const customerSelect = document.getElementById('customerSelect');
+
+customerSearch.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const customerOptions = customerDropdown.querySelectorAll('.customer-option, [data-customer-name="Walk-in Customer"]');
+    let hasVisibleOptions = false;
+    
+    customerOptions.forEach(option => {
+        const searchText = option.dataset.searchText || option.dataset.customerName.toLowerCase();
+        if (searchText.includes(searchTerm) || searchTerm === '') {
+            option.style.display = 'block';
+            hasVisibleOptions = true;
+        } else {
+            option.style.display = 'none';
+        }
+    });
+    
+    if (searchTerm.length > 0 && hasVisibleOptions) {
+        customerDropdown.classList.remove('hidden');
+    } else if (searchTerm.length === 0) {
+        customerDropdown.classList.add('hidden');
+    }
+});
+
+customerSearch.addEventListener('focus', function() {
+    if (this.value.length > 0) {
+        customerDropdown.classList.remove('hidden');
+    }
+});
+
+customerSearch.addEventListener('blur', function() {
+    // Delay hiding to allow click on dropdown
+    setTimeout(() => {
+        customerDropdown.classList.add('hidden');
+    }, 300);
+});
+
+// Customer selection from dropdown
+customerDropdown.addEventListener('click', function(e) {
+    const option = e.target.closest('[data-customer-id]');
+    if (option) {
+        selectCustomer(
+            option.dataset.customerId,
+            option.dataset.customerName,
+            option.dataset.customerMobile
+        );
+    }
+});
+
+function selectCustomer(customerId, customerName, customerMobile) {
+    customerSelect.value = customerId;
+    customerSearch.value = '';
+    customerDropdown.classList.add('hidden');
+    
+    if (customerId) {
+        document.getElementById('selectedCustomerName').textContent = customerName;
+        document.getElementById('selectedCustomerMobile').textContent = customerMobile;
+        selectedCustomerDiv.classList.remove('hidden');
+        customerSearch.style.display = 'none';
+    } else {
+        selectedCustomerDiv.classList.add('hidden');
+        customerSearch.style.display = 'block';
+        document.getElementById('selectedCustomerName').textContent = 'Walk-in Customer';
+        document.getElementById('selectedCustomerMobile').textContent = '';
+    }
+}
+
+function clearCustomerSelection() {
+    customerSelect.value = '';
+    customerSearch.value = '';
+    customerSearch.style.display = 'block';
+    selectedCustomerDiv.classList.add('hidden');
+    customerDropdown.classList.add('hidden');
+}
+
+// Product selection handled on each card creation to avoid duplicate adds
+
+function addToCart(productCard) {
+    const productId = productCard.dataset.productId;
+    const brand = productCard.dataset.brand;
+    const name = productCard.dataset.name;
+    const price = parseFloat(productCard.dataset.price);
+    const gst = parseFloat(productCard.dataset.gst);
+    const stock = parseInt(productCard.dataset.stock);
+    const cp = parseFloat(productCard.dataset.cp);
+
+    // Check if product already in cart
+    const existingItem = cart.find(item => item.productId === productId);
+    
+    if (existingItem) {
+        if (existingItem.quantity < stock) {
+            existingItem.quantity++;
+            updateCartDisplay();
+            calculateTotals();
+        } else {
+            alert('Insufficient stock!');
+        }
+    } else {
+        if (stock > 0) {
+            cart.push({
+                productId: productId,
+                name: name,
+                brand:brand,
+                price: price,
+                gst: gst,
+                quantity: 1,
+                stock: stock,
+                cp:cp
+            });
+            updateCartDisplay();
+            calculateTotals();
+        } else {
+            alert('Product out of stock!');
+        }
+    }
+}
+
+function updateCartDisplay() {
+    const cartContainer = document.getElementById('cartItems');
+    
+    if (cart.length === 0) {
+        cartContainer.innerHTML = '<p class="text-gray-500 text-center py-4">No items in cart</p>';
+        return;
+    }
+
+    cartContainer.innerHTML = cart.map(item => `
+        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+            <div class="flex-1">
+                <h4 class="font-medium text-sm">${item.name}</h4>
+                <p class="text-xs text-gray-500">₹${item.price.toFixed(2)} × ${item.quantity}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="updateQuantity('${item.productId}', -1)" class="w-6 h-6 bg-red-100 text-red-600 rounded-full text-xs hover:bg-red-200">-</button>
+                <span class="w-8 text-center text-sm">${item.quantity}</span>
+                <button onclick="updateQuantity('${item.productId}', 1)" class="w-6 h-6 bg-green-100 text-green-600 rounded-full text-xs hover:bg-green-200">+</button>
+                <button onclick="removeFromCart('${item.productId}')" class="w-6 h-6 bg-gray-100 text-red-600 rounded-full text-xs hover:bg-red-200">×</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateQuantity(productId, change) {
+    const item = cart.find(item => item.productId === productId);
+    if (item) {
+        const newQuantity = item.quantity + change;
+        if (newQuantity <= 0) {
+            removeFromCart(productId);
+        } else if (newQuantity <= item.stock) {
+            item.quantity = newQuantity;
+            updateCartDisplay();
+            calculateTotals();
+        } else {
+            alert('Insufficient stock!');
+        }
+    }
+}
+
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.productId !== productId);
+    updateCartDisplay();
+    calculateTotals();
+}
+
+function calculateTotals() {
+    const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
+    const cgstRate = parseFloat(document.getElementById('cgstRate').value) || 0;
+    const sgstRate = parseFloat(document.getElementById('sgstRate').value) || 0;
+    
+    let subtotal = 0;
+    let cpsubtotal=0;
+
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        const itemCPTotal =item.cp*item.quantity;
+        subtotal += itemTotal;
+        cpsubtotal+=itemCPTotal;
+    });
+
+    const discountedSubtotal = subtotal - discount;
+    const eligibleDiscount =subtotal - (cpsubtotal+(cpsubtotal/10));
+    const totalCGST = (discountedSubtotal * cgstRate) / 100;
+    const totalSGST = (discountedSubtotal * sgstRate) / 100;
+    const finalTotal = discountedSubtotal + totalCGST + totalSGST;
+
+    document.getElementById('eligibleDiscount').textContent = '₹' + eligibleDiscount.toFixed(2);
+    document.getElementById('subtotal').textContent = '₹' + subtotal.toFixed(2);
+    document.getElementById('cgstAmount').textContent = '₹' + totalCGST.toFixed(2);
+    document.getElementById('sgstAmount').textContent = '₹' + totalSGST.toFixed(2);
+    document.getElementById('finalTotal').textContent = '₹' + finalTotal.toFixed(2);
+}
+
+// Clear cart
+document.getElementById('clearCart').addEventListener('click', function() {
+    if (confirm('Are you sure you want to clear all items?')) {
+        cart = [];
+        updateCartDisplay();
+        calculateTotals();
+    }
+});
+
+// Discount and payment calculation
+document.getElementById('discountAmount').addEventListener('input', calculateTotals);
+document.getElementById('paymentAmount').addEventListener('input', calculateChange);
+
+function setFullAmount() {
+    const finalTotal = document.getElementById('finalTotal').textContent.replace('₹', '');
+    document.getElementById('paymentAmount').value = parseFloat(finalTotal);
+    calculateChange();
+}
+
+function calculateChange() {
+    const finalTotal = parseFloat(document.getElementById('finalTotal').textContent.replace('₹', ''));
+    const paymentAmount = parseFloat(document.getElementById('paymentAmount').value) || 0;
+    const change = paymentAmount - finalTotal;
+    
+    const changeDiv = document.getElementById('changeAmount');
+    const changeValue = document.getElementById('changeValue');
+    
+    if (change > 0) {
+        changeValue.textContent = change.toFixed(2);
+        changeDiv.classList.remove('hidden');
+        changeDiv.classList.remove('text-red-600');
+        changeDiv.classList.add('text-green-600');
+        changeDiv.innerHTML = 'Change: ₹<span id="changeValue">' + change.toFixed(2) + '</span>';
+    } else if (change < 0) {
+        changeValue.textContent = Math.abs(change).toFixed(2);
+        changeDiv.classList.remove('hidden');
+        changeDiv.classList.remove('text-green-600');
+        changeDiv.classList.add('text-red-600');
+        changeDiv.innerHTML = 'Pending: ₹<span id="changeValue">' + Math.abs(change).toFixed(2) + '</span>';
+    } else {
+        changeDiv.classList.add('hidden');
+    }
+}
+
+// Customer modal functions
+document.getElementById('addCustomerBtn').addEventListener('click', function() {
+    document.getElementById('customerModal').classList.remove('hidden');
+});
+
+function closeCustomerModal() {
+    document.getElementById('customerModal').classList.add('hidden');
+    document.getElementById('quickCustomerForm').reset();
+}
+
+function saveCustomer() {
+    const Cname = document.getElementById('customerName').value;
+    const Cmobile = document.getElementById('customerMobile').value;
+    const Cemail = document.getElementById('customerEmail').value;
+
+    if (!Cname || !Cmobile) {
+        alert('Name and mobile number are required!');
+        return;
+    }
+    const customerData={
+        name:Cname,
+        mobile:Cmobile,
+        email:Cemail
+    };
+
+    // Send to server
+    fetch('/pos/addCustomer', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(customerData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.success,"Responed")
+        if (data.success) {
+            closeCustomerModal();
+            selectCustomer(data.customerId, Cname, Cmobile);
+            alert('Customer Added successfully!');
+        } else {
+            alert('Error Creating Customer!');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error Creating Customer!');
+    });
+}
+
+
+function getReadyInvoice(){
+    if (cart.length === 0) {
+        alert('Please add items to the cart!');
+        return;
+    }
+
+    const customerSelect = document.getElementById('customerSelect');
+    const customerId = customerSelect.value || null;
+    const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
+    const SGSTPercent = parseFloat(document.getElementById('sgstRate').value) || 0;
+    const CGSTPercent = parseFloat(document.getElementById('cgstRate').value) || 0;
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const paymentAmount = document.getElementById('paymentAmount').value ||0;
+
+    // Calculate totals
+    let subtotal = 0;
+
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+    });
+    subtotal-=discount;
+    let totalCGST = (subtotal*CGSTPercent)/100;
+    let totalSGST = (subtotal*SGSTPercent)/100;
+
+    const finalTotal = subtotal + totalSGST + totalCGST;
+
+    const invoiceData = {
+        customer_id: customerId,
+        items: cart.map(item => ({
+            product_id: item.productId,
+            quantity: item.quantity,
+            unit_price: item.price,
+            total_price: item.price * item.quantity
+        })),
+        total_amount: subtotal,
+        discount: discount,
+        cgst: totalCGST,
+        sgst: totalSGST,
+        igst: 0,
+        final_amount: finalTotal,
+        payment_method: paymentMethod,
+        payment_amount: paymentAmount
+    };
+    //console.log(invoiceData);
+    return invoiceData;
+}
+
+
+// Generate invoice
+document.getElementById('generateInvoice').addEventListener('click', function() {
+    
+    const invoiceData=getReadyInvoice();
+    // Send to server
+    fetch('/pos/create-invoice', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(invoiceData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.success,"Responed")
+        if (data.success) {
+            currentInvoice = {
+                billNo: data.bill_no,
+                invoiceId: data.invoice_id,
+                invoiceData:invoiceData
+            };
+            
+            //generateInvoiceHTML();
+            //document.getElementById('invoiceModal').classList.remove('hidden');
+            //document.getElementById('printInvoice').disabled = false;
+            
+            // Clear cart
+            cart = [];
+            updateCartDisplay();
+            calculateTotals();
+            document.getElementById('discountAmount').value = '';
+            
+            alert('Sales Added successfully!');
+            location.reload(); 
+        } else {
+            alert('Error generating invoice!');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error generating invoice!');
+    });
+});
+
+
+function generateInvoiceHTML() {
+    const invoiceData = getReadyInvoice();
+    const bill_no = document.getElementById('testBill').value;
+    const customerName = document.getElementById('selectedCustomerName').textContent || "Walking Customer";
+    const customerMobile = document.getElementById('selectedCustomerMobile');
+    const currentDate = new Date().toLocaleDateString('en-IN');
+    const billQuotation = document.getElementById('billQuotation');
+    let sno=1;
+    
+    const invoiceHTML = `
+        <div class="text-center mb-6 print:px-2">
+            <h1 class="text-2xl font-bold text-gray-900">Ashwitha</h1>
+            <p class="text-gray-600 text-sm">Electricals and Plumbing</p>
+            <p class="text-gray-600 text-sm">IOB Bank Opp,Andipatti</p>
+             ${billQuotation.checked ? "":`
+            <p class="text-sm text-gray-500">GST No: 29ABCDE1234F1Z5</p>`}
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 not-print:mb-6 print:border-dashed print:border-y-1 print:py-1 print:px-2">  
+            ${billQuotation.checked ? ` <div class="flex col-span-2 justify-center"><strong class="text-center">Quotation</strong></div>`:""}
+            <div>
+                <h3 class="font-semibold text-gray-900">Bill To:</h3>
+                <p class="text-gray-700">${customerName}</p>
+            </div>
+            <div class="text-right">
+            ${billQuotation.checked ? "":`
+                <p><strong>Invoice No:</strong> ${bill_no}</p>`}
+                <p><strong>Date:</strong> ${currentDate}</p>
+            </div>
+        </div>
+        
+        <table class="w-full not-print:mb-6 not-print:border-collapse not-print:border not-print:border-gray-300 print:border-b-1 print:border-black print:border-dashed print:mb-1 print:px-2">
+            <thead>
+                <tr class="not-print:bg-gray-50">
+                    <th class="not-print:border not-print:border-gray-300 px-1 py-2 text-left print:border-b-1 print:border-dashed">SNo</th>
+                    <th class="not-print:border not-print:border-gray-300 px-3 py-2 text-left print:border-b-1 print:border-dashed">Item</th>
+                    <th class="not-print:border not-print:border-gray-300 px-3 py-2 text-center print:border-b-1 print:border-dashed">Qty</th>
+                    <th class="not-print:border not-print:border-gray-300 px-3 py-2 text-right print:border-b-1 print:border-dashed">Rate</th>
+                    <th class="not-print:border not-print:border-gray-300 px-3 py-2 text-right print:border-b-1 print:border-dashed">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${invoiceData.items.map(item => {
+                    const cartItem = cart.find(c => c.productId === item.product_id);
+                    return `
+                        <tr>
+                            <td class="border border-gray-300 px-3 py-2 print:border-0">${sno++}</td>
+                            <td class="border border-gray-300 px-3 py-2 print:border-0"><p>${cartItem?.brand}</p><p>${cartItem?.name || 'Unknown Product'}</p></td>
+                            <td class="border border-gray-300 px-3 py-2 text-center print:border-0">${item.quantity}</td>
+                            <td class="border border-gray-300 px-3 py-2 text-right print:border-0">${item.unit_price.toFixed(2)}</td>
+                            <td class="border border-gray-300 px-3 py-2 text-right print:border-0">${item.total_price.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+        
+        <div class="grid grid-cols-2 gap-4 print:px-2 ">
+            <div></div>
+            <div class="space-y-1">
+                <div class="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span>₹${invoiceData.total_amount.toFixed(2)}</span>
+                </div>
+                ${invoiceData.discount > 0 ? `
+                    <div class="flex justify-between">
+                        <span>Discount:</span>
+                        <span>-₹${invoiceData.discount.toFixed(2)}</span>
+                    </div>
+                ` : ''}
+                <div class="flex justify-between">
+                    <span>CGST:</span>
+                    <span>₹${invoiceData.cgst.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>SGST:</span>
+                    <span>₹${invoiceData.sgst.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between font-bold text-lg not-print:border-t print:border-t print:border-dashed pt-2">
+                    <span>Total:</span>
+                    <span>₹${invoiceData.final_amount.toFixed(2)}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-6 text-center text-sm text-gray-600">
+            <p>Thank you for your business!</p>
+        </div>
+    `;
+    
+    document.getElementById('invoiceContent').innerHTML = invoiceHTML;
+}
+
+function closeInvoiceModal() {
+    document.getElementById('invoiceModal').classList.add('hidden');
+}
+
+function getReadyPrint(){
+    generateInvoiceHTML();
+    document.getElementById('invoiceModal').classList.remove('hidden');
+}
+
+function printInvoice() {
+    const printContent = document.getElementById('invoiceContent').innerHTML;
+    const originalContent = document.body.innerHTML;
+    
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+    
+    // Reload the page to restore functionality
+    //location.reload();
+}
+
+
+// Initialize
+updateCartDisplay();
+calculateTotals();
+</script>
+{% endblock %} 

@@ -1,0 +1,672 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Settings - Electrical Billing Software{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">System Settings</h1>
+            <p class="text-gray-600">Configure system preferences and business settings</p>
+        </div>
+        <div class="flex space-x-3 mt-4 sm:mt-0">
+            <button id="saveAllSettings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-200">
+                Save All Changes
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Tabs -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="border-b border-gray-200">
+            <nav class="flex space-x-8 px-6">
+                <button class="settings-tab active py-4 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600" data-tab="business">
+                    Business Information
+                </button>
+                <button class="settings-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="billing">
+                    Billing Settings
+                </button>
+                <button class="settings-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="inventory">
+                    Inventory Settings
+                </button>
+                <button class="settings-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="system">
+                    System Configuration
+                </button>
+                <button class="settings-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="backup">
+                    Backup & Restore
+                </button>
+            </nav>
+        </div>
+
+        <!-- Business Information Tab -->
+        <div id="business" class="settings-content p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Business Information</h3>
+            <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Business Name *</label>
+                        <input 
+                            type="text" 
+                            id="businessName" 
+                            value="ABC Electronics Store"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">GST Number</label>
+                        <input 
+                            type="text" 
+                            id="gstNumber" 
+                            value="27AAAAA0000A1Z5"
+                            maxlength="15"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
+                        <input 
+                            type="tel" 
+                            id="contactNumber" 
+                            value="9876543210"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="businessEmail" 
+                            value="contact@abcelectronics.com"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Business Address</label>
+                    <textarea 
+                        id="businessAddress" 
+                        rows="3"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >123 Main Street, Electronics Market, Mumbai, Maharashtra - 400001</textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">State</label>
+                        <select id="businessState" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Maharashtra" selected>Maharashtra</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <!-- Add more states -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">PIN Code</label>
+                        <input 
+                            type="text" 
+                            id="pinCode" 
+                            value="400001"
+                            maxlength="6"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Billing Settings Tab -->
+        <div id="billing" class="settings-content p-6 hidden">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Billing Configuration</h3>
+            <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Invoice Prefix</label>
+                        <input 
+                            type="text" 
+                            id="invoicePrefix" 
+                            value="INV"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Starting Invoice Number</label>
+                        <input 
+                            type="number" 
+                            id="startingInvoiceNumber" 
+                            value="1001"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Default Payment Terms</label>
+                        <select id="paymentTerms" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="immediate" selected>Immediate</option>
+                            <option value="7_days">7 Days</option>
+                            <option value="15_days">15 Days</option>
+                            <option value="30_days">30 Days</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                        <select id="currency" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="INR" selected>INR (₹)</option>
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="includeGST" checked class="mr-2">
+                        <label for="includeGST" class="text-sm text-gray-700">Include GST in invoices</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="printAfterSale" checked class="mr-2">
+                        <label for="printAfterSale" class="text-sm text-gray-700">Auto-print invoice after sale</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="emailInvoice" class="mr-2">
+                        <label for="emailInvoice" class="text-sm text-gray-700">Email invoice to customer (if email available)</label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Invoice Footer Text</label>
+                    <textarea 
+                        id="invoiceFooter" 
+                        rows="3"
+                        placeholder="Thank you for your business!"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >Thank you for your business! For any queries, contact us at 9876543210.</textarea>
+                </div>
+            </form>
+        </div>
+
+        <!-- Inventory Settings Tab -->
+        <div id="inventory" class="settings-content p-6 hidden">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Inventory Management</h3>
+            <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Low Stock Threshold</label>
+                        <input 
+                            type="number" 
+                            id="lowStockThreshold" 
+                            value="10"
+                            min="1"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">Alert when stock goes below this number</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Critical Stock Threshold</label>
+                        <input 
+                            type="number" 
+                            id="criticalStockThreshold" 
+                            value="5"
+                            min="1"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">Critical alert when stock goes below this number</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="autoReduceStock" checked class="mr-2">
+                        <label for="autoReduceStock" class="text-sm text-gray-700">Auto-reduce stock on sale</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="allowNegativeStock" class="mr-2">
+                        <label for="allowNegativeStock" class="text-sm text-gray-700">Allow negative stock (overselling)</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="stockAlerts" checked class="mr-2">
+                        <label for="stockAlerts" class="text-sm text-gray-700">Show stock alerts on dashboard</label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Default Product Categories</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Lighting</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Switches</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Cables</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Fans</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Motors</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">MCB</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Stabilizers</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Inverters</span>
+                    </div>
+                    <button type="button" class="mt-3 text-blue-600 hover:text-blue-800 text-sm flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-1">
+                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                          </svg>
+                          Add Category
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- System Configuration Tab -->
+        <div id="system" class="settings-content p-6 hidden">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">System Configuration</h3>
+            <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date Format</label>
+                        <select id="dateFormat" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
+                            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Time Zone</label>
+                        <select id="timeZone" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Asia/Kolkata" selected>Asia/Kolkata (IST)</option>
+                            <option value="UTC">UTC</option>
+                            <option value="America/New_York">America/New_York</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Records Per Page</label>
+                        <select id="recordsPerPage" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Session Timeout (minutes)</label>
+                        <input 
+                            type="number" 
+                            id="sessionTimeout" 
+                            value="30"
+                            min="5"
+                            max="480"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="enableLogging" checked class="mr-2">
+                        <label for="enableLogging" class="text-sm text-gray-700">Enable system logging</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="enableNotifications" checked class="mr-2">
+                        <label for="enableNotifications" class="text-sm text-gray-700">Enable system notifications</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="autoBackup" class="mr-2">
+                        <label for="autoBackup" class="text-sm text-gray-700">Enable automatic daily backups</label>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="text-yellow-600 mr-3 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                <path fill-rule="evenodd" d="M11.484 2.17a.75.75 0 0 1 1.032 0 11.209 11.209 0 0 0 7.877 3.08.75.75 0 0 1 .722.515 12.74 12.74 0 0 1 .635 3.985c0 5.942-4.064 10.933-9.563 12.348a.749.749 0 0 1-.374 0C6.314 20.683 2.25 15.692 2.25 9.75c0-1.39.223-2.73.635-3.985a.75.75 0 0 1 .722-.516l.143.001c2.996 0 5.718-1.17 7.734-3.08ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75ZM12 15a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75v-.008a.75.75 0 0 0-.75-.75H12Z" clip-rule="evenodd" />
+                              </svg>                              
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-yellow-800">Database Information</h4>
+                            <p class="text-sm text-yellow-700 mt-1">
+                                Database Size: 2.5 MB<br>
+                                Last Backup: Yesterday 11:30 PM<br>
+                                Total Records: 1,247
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Backup & Restore Tab -->
+        <div id="backup" class="settings-content p-6 hidden">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Backup & Restore</h3>
+            
+            <!-- Backup Section -->
+            <div class="mb-8">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">Create Backup</h4>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-center">
+                        <i class=" text-blue-600 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
+                              </svg>
+                              
+                        </i>
+                        <div>
+                            <p class="text-sm text-blue-800">
+                                Regular backups help protect your data. It's recommended to backup before major updates.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <button id="createBackup" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors duration-200 flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 24 24" fill="currentColor" class="size-5 mr-1">
+                            <path fill-rule="evenodd" d="M10.5 3.75a6 6 0 0 0-5.98 6.496A5.25 5.25 0 0 0 6.75 20.25H18a4.5 4.5 0 0 0 2.206-8.423 3.75 3.75 0 0 0-4.133-4.303A6.001 6.001 0 0 0 10.5 3.75Zm2.25 6a.75.75 0 0 0-1.5 0v4.94l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V9.75Z" clip-rule="evenodd" />
+                          </svg>
+                          Create Backup
+                    </button>
+                    <button id="scheduleBackup" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mb-1 inline mr-1">
+                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
+                          </svg>
+                          Schedule Auto Backup
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Backups -->
+            <div class="mb-8">
+                <h4 class="text-md font-semibold text-gray-800 mb-4">Recent Backups</h4>
+                <div class="bg-white border border-gray-200 rounded-lg">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Size</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-900">2024-01-07 10:30 AM</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">2.1 MB</td>
+                                    <td class="px-6 py-4 text-sm">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Manual</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 1 24 24" fill="currentColor" class="size-5 mr-1 inline">
+                                                <path fill-rule="evenodd" d="M10.5 3.75a6 6 0 0 0-5.98 6.496A5.25 5.25 0 0 0 6.75 20.25H18a4.5 4.5 0 0 0 2.206-8.423 3.75 3.75 0 0 0-4.133-4.303A6.001 6.001 0 0 0 10.5 3.75Zm2.25 6a.75.75 0 0 0-1.5 0v4.94l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V9.75Z" clip-rule="evenodd" />
+                                              </svg>Download
+                                        </button>
+                                        <button class="text-green-600 hover:text-green-900 mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline mb-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                                              </svg>
+                                              Restore
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 inline mb-1">
+                                                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                                              </svg>
+                                              Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-sm text-gray-900">2024-01-06 11:30 PM</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">2.0 MB</td>
+                                    <td class="px-6 py-4 text-sm">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Auto</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-1 inline mb-1">
+                                                <path fill-rule="evenodd" d="M10.5 3.75a6 6 0 0 0-5.98 6.496A5.25 5.25 0 0 0 6.75 20.25H18a4.5 4.5 0 0 0 2.206-8.423 3.75 3.75 0 0 0-4.133-4.303A6.001 6.001 0 0 0 10.5 3.75Zm2.25 6a.75.75 0 0 0-1.5 0v4.94l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V9.75Z" clip-rule="evenodd" />
+                                              </svg>Download
+                                        </button>
+                                        <button class="text-green-600 hover:text-green-900 mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline mb-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                                              </svg>
+                                              Restore
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 inline mb-1">
+                                                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                                              </svg>
+                                              Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Restore Section -->
+            <div>
+                <h4 class="text-md font-semibold text-gray-800 mb-4">Restore from File</h4>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <div class="flex">
+                        <i class=" text-red-600 mr-3 mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mb-1 inline">
+                                <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
+                              </svg>
+                              
+                        </i>
+                        <div>
+                            <h5 class="font-medium text-red-800">Warning</h5>
+                            <p class="text-sm text-red-700 mt-1">
+                                Restoring will overwrite all current data. Make sure to backup current data before proceeding.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <input type="file" id="restoreFile" accept=".db,.sql" class="hidden">
+                    <button onclick="document.getElementById('restoreFile').click()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-1 inline mb-1">
+                            <path fill-rule="evenodd" d="M10.5 3.75a6 6 0 0 0-5.98 6.496A5.25 5.25 0 0 0 6.75 20.25H18a4.5 4.5 0 0 0 2.206-8.423 3.75 3.75 0 0 0-4.133-4.303A6.001 6.001 0 0 0 10.5 3.75Zm2.03 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v4.94a.75.75 0 0 0 1.5 0v-4.94l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z" clip-rule="evenodd" />
+                          </svg>
+                          Choose Backup File
+                    </button>
+                    <button id="performRestore" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors duration-200" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline mb-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                          </svg>
+                          Restore Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize settings
+document.addEventListener('DOMContentLoaded', function() {
+    setupTabs();
+    setupEventListeners();
+});
+
+function setupTabs() {
+    const tabButtons = document.querySelectorAll('.settings-tab');
+    const tabContents = document.querySelectorAll('.settings-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tabId = this.dataset.tab;
+            
+            // Update active tab
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active', 'border-blue-500', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            this.classList.add('active', 'border-blue-500', 'text-blue-600');
+            this.classList.remove('border-transparent', 'text-gray-500');
+            
+            // Show/hide content
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(tabId).classList.remove('hidden');
+        });
+    });
+}
+
+function setupEventListeners() {
+    // Save all settings
+    document.getElementById('saveAllSettings').addEventListener('click', saveAllSettings);
+    
+    // Backup functions
+    document.getElementById('createBackup').addEventListener('click', createBackup);
+    document.getElementById('scheduleBackup').addEventListener('click', scheduleBackup);
+    document.getElementById('performRestore').addEventListener('click', performRestore);
+    
+    // File input change
+    document.getElementById('restoreFile').addEventListener('change', function() {
+        document.getElementById('performRestore').disabled = !this.files.length;
+    });
+
+    // GST number formatting
+    document.getElementById('gstNumber').addEventListener('input', function(e) {
+        e.target.value = e.target.value.toUpperCase();
+    });
+
+    // PIN code validation
+    document.getElementById('pinCode').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+
+    // Contact number validation
+    document.getElementById('contactNumber').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+}
+
+function saveAllSettings() {
+    // Collect all form data
+    const businessSettings = {
+        businessName: document.getElementById('businessName').value,
+        gstNumber: document.getElementById('gstNumber').value,
+        contactNumber: document.getElementById('contactNumber').value,
+        businessEmail: document.getElementById('businessEmail').value,
+        businessAddress: document.getElementById('businessAddress').value,
+        businessState: document.getElementById('businessState').value,
+        pinCode: document.getElementById('pinCode').value
+    };
+
+    const billingSettings = {
+        invoicePrefix: document.getElementById('invoicePrefix').value,
+        startingInvoiceNumber: document.getElementById('startingInvoiceNumber').value,
+        paymentTerms: document.getElementById('paymentTerms').value,
+        currency: document.getElementById('currency').value,
+        includeGST: document.getElementById('includeGST').checked,
+        printAfterSale: document.getElementById('printAfterSale').checked,
+        emailInvoice: document.getElementById('emailInvoice').checked,
+        invoiceFooter: document.getElementById('invoiceFooter').value
+    };
+
+    const inventorySettings = {
+        lowStockThreshold: document.getElementById('lowStockThreshold').value,
+        criticalStockThreshold: document.getElementById('criticalStockThreshold').value,
+        autoReduceStock: document.getElementById('autoReduceStock').checked,
+        allowNegativeStock: document.getElementById('allowNegativeStock').checked,
+        stockAlerts: document.getElementById('stockAlerts').checked
+    };
+
+    const systemSettings = {
+        dateFormat: document.getElementById('dateFormat').value,
+        timeZone: document.getElementById('timeZone').value,
+        recordsPerPage: document.getElementById('recordsPerPage').value,
+        sessionTimeout: document.getElementById('sessionTimeout').value,
+        enableLogging: document.getElementById('enableLogging').checked,
+        enableNotifications: document.getElementById('enableNotifications').checked,
+        autoBackup: document.getElementById('autoBackup').checked
+    };
+
+    // In production, this would send data to the backend
+    console.log('Saving settings:', {
+        business: businessSettings,
+        billing: billingSettings,
+        inventory: inventorySettings,
+        system: systemSettings
+    });
+
+    // Show success message
+    showNotification('Settings saved successfully!', 'success');
+}
+
+function createBackup() {
+    // Show loading state
+    const btn = document.getElementById('createBackup');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-1 mt-1">
+  <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd" />
+</svg>
+Creating...`;
+    btn.disabled = true;
+
+    // Simulate backup creation
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        showNotification('Backup created successfully!', 'success');
+        
+        // In production, this would trigger a file download
+        console.log('Backup created');
+    }, 2000);
+}
+
+function scheduleBackup() {
+    const confirmed = confirm('Enable automatic daily backups at 11:30 PM?');
+    if (confirmed) {
+        showNotification('Automatic backups scheduled successfully!', 'success');
+    }
+}
+
+function performRestore() {
+    const file = document.getElementById('restoreFile').files[0];
+    if (!file) return;
+
+    const confirmed = confirm('This will overwrite all current data. Are you sure you want to restore from this backup?');
+    if (!confirmed) return;
+
+    // Show loading state
+    const btn = document.getElementById('performRestore');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 mr-1 mt-1">
+  <path fill-rule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clip-rule="evenodd" />
+</svg>Restoring...`;
+    btn.disabled = true;
+
+    // Simulate restore process
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = true; // Keep disabled until new file selected
+        document.getElementById('restoreFile').value = '';
+        showNotification('Data restored successfully! Please restart the application.', 'success');
+    }, 3000);
+}
+
+function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg ${
+        type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 
+        'bg-red-100 text-red-800 border border-red-200'
+    }`;
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 inline">
+            <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+            </svg>
+            ${message}
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+</script>
+{% endblock %} 
