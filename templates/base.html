@@ -169,9 +169,11 @@
                                 <li class="p-1">
                                     <a href="{{ url_for('products') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint in ['products', 'add_product', 'edit_product'] %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">Products</a>
                                 </li>
+                                {% if current_user.role in ['admin', 'owner'] %}
                                 <li class="p-1">
                                     <a href="{{ url_for('stock_management') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'stock_management' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">Stock Management</a>
                                 </li>
+                                {% endif %}
                             </ul>
                         </div>
                     </li>
@@ -257,6 +259,7 @@
                             Expenses
                         </a>
                     </li>
+                    {% if current_user.role in ['admin', 'owner'] %}
                     <!-- Reports Dropdown -->
                     <li class="p-1">
                         <div class="group">
@@ -290,6 +293,7 @@
                             </ul>
                         </div>
                     </li>
+                    {% endif %}
                     {% if current_user.role in ['admin', 'owner'] %}
                     <!-- Admin Section -->
                     <li class="p-1">
@@ -316,11 +320,13 @@
                                         Manage Passwords
                                     </a>
                                 </li>
+                                {% if current_user.role in ['admin'] %}
                                 <li class="p-1">
                                     <a href="{{ url_for('admin_settings') }}" class="flex items-center px-12 py-1 text-sm hover:ring-1 hover:ring-blue-500 hover:rounded-md {% if request.endpoint == 'admin_settings' %}font-medium text-blue-700 border-r-4 border-blue-700{% endif %}">
                                         Settings
                                     </a>
                                 </li>
+                                {% endif%}
                             </ul>
                         </div>
                     </li>
