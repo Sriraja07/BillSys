@@ -791,42 +791,43 @@ function generateInvoiceHTML() {
     const invoiceData = getReadyInvoice();
     const bill_no = document.getElementById('testBill').value;
     const customerName = document.getElementById('selectedCustomerName').textContent || "Walking Customer";
-    const customerMobile = document.getElementById('selectedCustomerMobile');
+    const customerMobile = document.getElementById('selectedCustomerMobile').textContent || "";
     const currentDate = new Date().toLocaleDateString('en-IN');
     const billQuotation = document.getElementById('billQuotation');
     let sno=1;
+    let qsno=1;
+
     
-    const invoiceHTML = `
-        <div class="text-center mb-6 print:px-2">
-            <h1 class="text-2xl font-bold text-gray-900">Ashwitha</h1>
-            <p class="text-gray-600 text-sm">Electricals and Plumbing</p>
-            <p class="text-gray-600 text-sm">13/322/A1, Vishnu Durga Fancy Store</p>
-            <p class="text-gray-600 text-sm">Theni Main Road, Andipatti 625512</p>
-             ${billQuotation.checked ? "":`
-            <p class="text-sm text-gray-500">GST No: 29ABCDE1234F1Z5</p>`}
+    const invoiceQHTML = `
+    <div class='print:font-sans print:font-medium'>
+        <div class="text-center mb-6 print:px-1">
+            <h1 class="text-2xl font-bold text-gray-900 zen-dots-regular">Ashwitha</h1>
+            <p class="not-printtext-gray-600 text-sm">Electricals and Plumbing</p>
+            <p class="not-print:text-gray-600 text-sm">13/322/A1, Vishnu Durga Fancy Store</p>
+            <p class="not-print:text-gray-600 text-sm">Theni Main Road, Andipatti 625512</p>
         </div>
         
-        <div class="grid grid-cols-2 gap-4 not-print:mb-6 print:border-dashed print:border-y-1 print:py-1 print:px-2">  
+        <div class="grid grid-cols-2 justify-between not-print:mb-6 print:border-dashed print:border-y-1 print:py-1 print:px-2">  
             ${billQuotation.checked ? ` <div class="flex col-span-2 justify-center"><strong class="text-center">Quotation</strong></div>`:""}
             <div>
-                <h3 class="font-semibold text-gray-900">Bill To:</h3>
-                <p class="text-gray-700">${customerName}</p>
+                <h3 class="font-semibold text-gray-900 text-sm">Bill To:</h3>
+                <p class="not-print:text-gray-700 text-sm">${customerName}</p>
             </div>
-            <div class="text-right">
+            <div class="text-right text-sm">
             ${billQuotation.checked ? "":`
                 <p><strong>Invoice No:</strong> ${bill_no}</p>`}
                 <p><strong>Date:</strong> ${currentDate}</p>
             </div>
         </div>
         
-        <table class="w-full not-print:mb-6 not-print:border-collapse not-print:border not-print:border-gray-300 print:border-b-1 print:border-black print:border-dashed print:mb-1 print:px-2">
+        <table class="w-full not-print:mb-6 not-print:border-collapse not-print:border not-print:border-gray-300 print:border-b-1 print:border-black print:border-dashed print:mb-1 print:text-sm">
             <thead>
                 <tr class="not-print:bg-gray-50">
-                    <th class="not-print:border not-print:border-gray-300 px-1 py-2 text-left print:border-b-1 print:border-dashed">SNo</th>
-                    <th class="not-print:border not-print:border-gray-300 px-3 py-2 text-left print:border-b-1 print:border-dashed">Item</th>
-                    <th class="not-print:border not-print:border-gray-300 px-3 py-2 text-center print:border-b-1 print:border-dashed">Qty</th>
-                    <th class="not-print:border not-print:border-gray-300 px-3 py-2 text-right print:border-b-1 print:border-dashed">Rate</th>
-                    <th class="not-print:border not-print:border-gray-300 px-3 py-2 text-right print:border-b-1 print:border-dashed">Amount</th>
+                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-left print:border-b-1 print:border-dashed">SNo</th>
+                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-left print:border-b-1 print:border-dashed">Item</th>
+                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-center print:border-b-1 print:border-dashed">Qty</th>
+                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-center print:border-b-1 print:border-dashed">Rate</th>
+                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-center print:border-b-1 print:border-dashed">Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -834,20 +835,20 @@ function generateInvoiceHTML() {
                     const cartItem = cart.find(c => c.productId === item.product_id);
                     return `
                         <tr>
-                            <td class="border border-gray-300 px-3 py-2 print:border-0">${sno++}</td>
-                            <td class="border border-gray-300 px-3 py-2 print:border-0"><p>${cartItem?.brand}</p><p>${cartItem?.name || 'Unknown Product'}</p></td>
-                            <td class="border border-gray-300 px-3 py-2 text-center print:border-0">${item.quantity}</td>
-                            <td class="border border-gray-300 px-3 py-2 text-right print:border-0">${item.unit_price.toFixed(2)}</td>
-                            <td class="border border-gray-300 px-3 py-2 text-right print:border-0">${item.total_price.toFixed(2)}</td>
+                            <td class="border border-gray-300 px-1 py-1 print:border-0">${qsno++}</td>
+                            <td class="border border-gray-300 px-1 py-1 print:border-0"><p>${cartItem?.name || 'Unknown Product'}</p></td>
+                            <td class="border border-gray-300 px-1 py-1 text-center print:border-0">${item.quantity}</td>
+                            <td class="border border-gray-300 px-1 py-1 text-right print:border-0">${item.unit_price.toFixed(2)}</td>
+                            <td class="border border-gray-300 px-1 py-1 text-right print:border-0">${item.total_price.toFixed(2)}</td>
                         </tr>
                     `;
                 }).join('')}
             </tbody>
         </table>
         
-        <div class="grid grid-cols-2 gap-4 print:px-2 ">
+        <div class="grid grid-cols-2 gap-4 print:px-2">
             <div></div>
-            <div class="space-y-1">
+            <div class="space-y-1 text-sm">
                 <div class="flex justify-between">
                     <span>Subtotal:</span>
                     <span>₹${invoiceData.total_amount.toFixed(2)}</span>
@@ -874,11 +875,106 @@ function generateInvoiceHTML() {
         </div>
         
         <div class="mt-6 text-center text-sm text-gray-600">
-            <p>Thank you for your business!</p>
+            <p>Thank you!</p>
         </div>
+    </div
     `;
-    
-    document.getElementById('invoiceContent').innerHTML = invoiceHTML;
+    const invoiceHTML = `
+    <div class="font-sans m-6 border-1">
+        <div class="text-center border-b-1 p-1">
+            <h1 class="text-3xl font-bold text-gray-900 zen-dots-regular">Ashwitha</h1>
+            <p class="text-xl font-bold text-gray-900 zen-dots-regular">Electricals and Plumbing</p>
+            <p class="not-print:text-gray-600">13/322/A1, Vishnu Durga Fancy Store</p>
+            <p class="not-print:text-gray-600">Theni Main Road, Andipatti 625512</p>
+            <p class="not-print:text-gray-600">GSTIN:312312S23433434</p>
+        </div>
+        <div class="grid grid-cols-2 justify-between">  
+            <div class="border-r-1">
+                <h3 class="font-semibold text-gray-900 p-1">Bill To:</h3>
+                <p class="not-print:text-gray-700 px-1 text-sm">${customerName}</p>
+                <p class="not-print:text-gray-700 px-1 text-sm">${customerMobile}</p>
+                <p class="not-print:text-gray-700 px-1 text-sm">Andipatti, Theni</p>
+            </div>
+            <div class="grid grid-cols-2 justify-between">
+            <div class="justify-between border-r-1">
+                <p class="border-b-1 p-1">Invoice No:</p>
+                <p class="border-b-1 p-1">Date:</p> 
+                <p class="p-1">Place of Supply</p>   
+            </div>
+            <div class="justify-between">
+                <p class="border-b-1 p-1">${bill_no}</p>
+                <p class="border-b-1 p-1">${currentDate}</p>
+                <p class="p-1">Andipatti</p>
+            </div>
+            </div>
+        </div>
+        <table class="w-full border-collapse border-y-1">
+            <thead>
+                <tr class="not-print:bg-gray-50">
+                    <th class="w-1/16 border-y-1 px-1 py-1 text-center">S.No</th>
+                    <th class="w-7/16 border px-1 py-1 text-center">Description of Goods</th>
+                    <th class="w-2/16 border px-1 py-1 text-center">Quantity</th>
+                    <th class="w-2/16 border px-1 py-1 text-center">MRP</th>
+                    <th class="w-2/16 border px-1 py-1 text-center">Disc Rate</th>
+                    <th class="w-2/16 border-y-1 px-1 py-1 text-center">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${invoiceData.items.map(item => {
+                    const cartItem = cart.find(c => c.productId === item.product_id);
+                    return `
+                        <tr>
+                            <td class="border-y-1 px-1 py-1 text-center">${sno++}</td>
+                            <td class="border px-1 py-1"><p>${cartItem?.name || 'Unknown Product'}</p></td>
+                            <td class="border px-1 py-1 text-center">${item.quantity}</td>
+                            <td class="border px-1 py-1 text-right">${item.unit_price.toFixed(2)}</td>
+                            <td class="border px-1 py-1 text-right">${item.unit_price.toFixed(2)}</td>
+                            <td class="border-y-1 px-1 py-1 text-right">${item.total_price.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+        <div class="grid grid-cols-3 border-b-1">
+            <div class="col-span-2"></div>
+            <div class="border-l-1">
+                <div class="flex justify-between border-b-1">
+                    <span class="w-1/2 px-1 border-r-1">Subtotal:</span>
+                    <span class="w-1/2 px-1 text-right">₹${invoiceData.total_amount.toFixed(2)}</span>
+                </div>
+                ${invoiceData.discount > 0 ? `
+                    <div class="flex justify-between border-b-1">
+                        <span class="w-1/2 px-1 border-r-1">Discount:</span>
+                        <span class="w-1/2 px-1 text-right">-₹${invoiceData.discount.toFixed(2)}</span>
+                    </div>
+                ` : ''}
+                <div class="flex justify-between border-b-1">
+                    <span class="w-1/2 px-1 border-r-1">CGST 9%:</span>
+                    <span class="w-1/2 px-1 text-right">₹${invoiceData.cgst.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between border-b-1">
+                    <span class="w-1/2 px-1 border-r-1">SGST 9%:</span>
+                    <span class="w-1/2 px-1 text-right">₹${invoiceData.sgst.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between font-bold text-lg">
+                    <span class="w-1/2 px-1 border-r-1">Total:</span>
+                    <span class="w-1/2 px-1 text-right">₹${invoiceData.final_amount.toFixed(2)}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-6 text-center text-sm text-gray-600">
+            <p>Thank you!</p>
+        </div>
+    </div
+    `;
+    if(billQuotation.checked){
+        document.getElementById('invoiceContent').innerHTML = invoiceQHTML;
+    }
+    else{
+        document.getElementById('invoiceContent').innerHTML = invoiceHTML;
+    }
+
 }
 
 function closeInvoiceModal() {
