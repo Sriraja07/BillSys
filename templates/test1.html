@@ -3,626 +3,355 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Auto-Paginated Receipt</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Receipt Print</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     @media print {
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      table {
+        page-break-inside: auto;
+      }
       thead {
         display: table-header-group;
-        page-break-before: avoid;
+      }
+      
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
       }
     }
-   
   </style>
 </head>
-<body class="m-4">
-  <table class="w-full border-collapse border border-gray-500">
-    <tr>
-      <td rowspan="1" colspan="8" class="border border-gray-500">
-        <h1 class="text-3xl text-center font-bold text-gray-900 zen-dots-regular">Ashwitha</h1>
-        <p class="text-xl text-center font-bold text-gray-900 zen-dots-regular">Electricals and Plumbing</p>
-        <p class="text-sm text-center not-print:text-gray-600">13/322/A1, Vishnu Durga Fancy Store</p>
-        <p class="text-sm text-center not-print:text-gray-600">Theni Main Road, Andipatti 625512</p>
-        <p class="text-sm text-center not-print:text-gray-600">GSTIN:312312S23433434</p>
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="3" colspan="3" class="w-2/6 border border-gray-500">
-        <h3 class="font-semibold text-gray-900 p-1">Bill To:</h3>
-        <p class="not-print:text-gray-700 px-1 text-sm">${customerName}</p>
-        <p class="not-print:text-gray-700 px-1 text-sm">${customerMobile}</p>
-        <p class="not-print:text-gray-700 px-1 text-sm">Andipatti, Theni</p>
-      </td>
-      <td rowspan="3" colspan="3" class="w-2/6 border border-gray-500">
-        <h3 class="font-semibold text-gray-900 p-1">Bill To:</h3>
-        <p class="not-print:text-gray-700 px-1 text-sm">${customerName}</p>
-        <p class="not-print:text-gray-700 px-1 text-sm">${customerMobile}</p>
-        <p class="not-print:text-gray-700 px-1 text-sm">Andipatti, Theni</p>
-      </td>
-      <td rowspan="1" colspan="1" class="w-1/6 border border-collapse border-gray-500">
-        <p class="p-1">Invoice No:1</p>
-      </td>
-      <td rowspan="1" colspan="1" class="w-1/6 border border-collapse border-gray-500">
-        <p class=" p-1">${bill_no}</p>
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="1" colspan="1" class="w-1/6 border border-collapse border-gray-500">
-          <p class="border p-1">Date:</p> 
-      </td>
-      <td rowspan="1" colspan="1" class="w-1/6 border border-collapse border-gray-500">
-        <p class="border-b-1 p-1">${currentDate}</p>
-      </td>
-    </tr>
-    <tr>
-      <td rowspan="1" colspan="1" class="w-1/6 border border-collapse border-gray-500">
-        <p class="p-1">Place of Supply</p>
-      </td>
-      <td rowspan="1" colspan="1" class="w-1/6 border border-collapse border-gray-500">
-        <p class="p-1">Andipatti</p>
-      </td>
-    </tr>
-    <thead>
-    <tr class="">
-      <th rowspan="1" colspan="1" class="w-1/12 border border-collapse border-gray-500">SI.No</th>
-      <th rowspan="1" colspan="3" class="5/12 border border-collapse border-gray-500">Name</th>
-      <th rowspan="1" colspan="1" class="w-1/12 border border-collapse border-gray-500">Quantity</th>
-      <th rowspan="1" colspan="1" class="w-1/12 border border-collapse border-gray-500">MRP</th>
-      <th rowspan="1" colspan="1" class="w-1/12 border border-collapse border-gray-500">Rate</th>
-      <th rowspan="1" colspan="1" class="w-2/12 border border-collapse border-gray-500">Amount</th>
-    </tr> 
-    </thead> 
-    <tbody>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-        </tr>
-        <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+<body class="p-4 text-black bg-white">
+
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-2xl font-bold text-center mb-2">My Store</h1>
+    <p class="text-center mb-4">Receipt #: 123456 | Date: 2025-09-24</p>
+
+    <table class="w-full border border-gray-300 text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="text-left p-2 border">Product</th>
+          <th class="text-right p-2 border">Qty</th>
+          <th class="text-right p-2 border">Price</th>
+          <th class="text-right p-2 border">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Sample product rows -->
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
+        </tr>
+        <tr>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
-        
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="3" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">1000</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">100</td>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
-        </tbody>
-        <tfoot>
         <tr>
-          <td rowspan="1" colspan="6"></td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="6"></td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="6"></td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="6"></td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="6"></td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
-          <td rowspan="1" colspan="1" class="border border-collapse border-gray-500">Testing Product</td>
+          <td class="p-2 border">Product A</td>
+          <td class="p-2 border text-right">2</td>
+          <td class="p-2 border text-right">₹100</td>
+          <td class="p-2 border text-right">₹200</td>
         </tr>
         <tr>
-          <td rowspan="1" colspan="6" class="border border-collapse border-gray-500"></td>
-          <td rowspan="1" colspan="2" class="border border-collapse border-gray-500">Authorized</td>
+          <td class="p-2 border">Product B</td>
+          <td class="p-2 border text-right">1</td>
+          <td class="p-2 border text-right">₹500</td>
+          <td class="p-2 border text-right">₹500</td>
         </tr>
-      </tfoot>
-  </table>
+        <!-- Add more rows as needed -->
+      </tbody>
+      
+    </table>
+    <tfoot class="bg-gray-100">
+      <tr>
+        <td colspan="3" class="p-2 border text-right font-semibold">Subtotal</td>
+        <td class="p-2 border text-right">₹700</td>
+      </tr>
+      <tr>
+        <td colspan="3" class="p-2 border text-right font-semibold">GST (18%)</td>
+        <td class="p-2 border text-right">₹126</td>
+      </tr>
+      <tr>
+        <td colspan="3" class="p-2 border text-right font-bold">Total</td>
+        <td class="p-2 border text-right font-bold">₹826</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 text-center">Thank you for shopping with us!</td>
+      </tr>
+    </tfoot>
+  </div>
+
 </body>
 </html>

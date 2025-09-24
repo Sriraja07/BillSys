@@ -807,7 +807,7 @@ function generateInvoiceHTML() {
             <p class="not-print:text-gray-600 text-sm">Theni Main Road, Andipatti 625512</p>
         </div>
         
-        <div class="grid grid-cols-2 justify-between not-print:mb-6 print:border-dashed print:border-y-1 print:py-1 print:px-2">  
+        <div class="grid grid-cols-2 justify-between not-print:mb-6  print:border-dashed print:border-y-1 print:py-1 print:px-2">  
             ${billQuotation.checked ? ` <div class="flex col-span-2 justify-center"><strong class="text-center">Quotation</strong></div>`:""}
             <div>
                 <h3 class="font-semibold text-gray-900 text-sm">Bill To:</h3>
@@ -880,7 +880,7 @@ function generateInvoiceHTML() {
     </div
     `;
     const invoiceHTML = `
-    <div class="font-sans m-6 border-1">
+    <div class="font-sans m-6 border-1 print:h-full">
         <div class="text-center border-b-1 p-1">
             <h1 class="text-3xl font-bold text-gray-900 zen-dots-regular">Ashwitha</h1>
             <p class="text-xl font-bold text-gray-900 zen-dots-regular">Electricals and Plumbing</p>
@@ -889,26 +889,29 @@ function generateInvoiceHTML() {
             <p class="not-print:text-gray-600">GSTIN:312312S23433434</p>
         </div>
         <div class="grid grid-cols-2 justify-between">  
-            <div class="border-r-1">
+            <div class="border-r-1 gap-1">
                 <h3 class="font-semibold text-gray-900 p-1">Bill To:</h3>
                 <p class="not-print:text-gray-700 px-1 text-sm">${customerName}</p>
                 <p class="not-print:text-gray-700 px-1 text-sm">${customerMobile}</p>
                 <p class="not-print:text-gray-700 px-1 text-sm">Andipatti, Theni</p>
             </div>
+            
             <div class="grid grid-cols-2 justify-between">
-            <div class="justify-between border-r-1">
-                <p class="border-b-1 p-1">Invoice No:</p>
-                <p class="border-b-1 p-1">Date:</p> 
-                <p class="p-1">Place of Supply</p>   
-            </div>
-            <div class="justify-between">
-                <p class="border-b-1 p-1">${bill_no}</p>
-                <p class="border-b-1 p-1">${currentDate}</p>
-                <p class="p-1">Andipatti</p>
-            </div>
+                <div class="justify-between border-r-1">
+                    <p class="border-b-1 p-1 text-sm">Invoice No:</p>
+                    <p class="border-b-1 p-1 text-sm">Date:</p>    
+                </div>
+                <div class="justify-between">
+                    <p class="border-b-1 p-1 text-sm">${bill_no}</p>
+                    <p class="border-b-1 p-1 text-sm">${currentDate}</p>
+                </div>
+                <div class="justify-between col-span-2">
+                    <p class="p-1 text-sm">Terms of Delivery </p>
+                    <p class="h-5"></p>
+                </div>
             </div>
         </div>
-        <table class="w-full border-collapse border-y-1">
+        <table class="w-full border-collapse border-y-1 text-sm">
             <thead>
                 <tr class="not-print:bg-gray-50">
                     <th class="w-1/16 border-y-1 px-1 py-1 text-center">S.No</th>
@@ -935,7 +938,7 @@ function generateInvoiceHTML() {
                 }).join('')}
             </tbody>
         </table>
-        <div class="grid grid-cols-3 border-b-1">
+        <div class="grid grid-cols-3 border-b-1 text-sm">
             <div class="col-span-2"></div>
             <div class="border-l-1">
                 <div class="flex justify-between border-b-1">
@@ -962,9 +965,18 @@ function generateInvoiceHTML() {
                 </div>
             </div>
         </div>
-        
-        <div class="mt-6 text-center text-sm text-gray-600">
-            <p>Thank you!</p>
+        <div class="">
+        <div class="grid grid-cols-3 mt-5  border-t-1">
+            <div class="col-span-2 border-r-1 p-1">
+                <p class="font-bold">Declaration:</p>
+                <p>We declared that this invoice shows the actual price of the goods described and that all particulars are true and correct.</p>
+            </div>
+            <div class="col-span-1">
+                <div class="h-10"></div>
+                <p class="font-bold text-center">Signature</p>
+                <p class="text-center">Ashwitha Electricals</p>
+            </div>
+        </div>
         </div>
     </div
     `;
