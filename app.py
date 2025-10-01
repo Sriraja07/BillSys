@@ -660,7 +660,7 @@ def create_invoice():
     db.session.add(invoice)
     db.session.flush()  # Get the invoice ID
 
-    if int(data.get('payment_amount'))!=0:
+    if float(data.get('payment_amount'))!=0.0:
         payment = Payment(
         invoice_id=invoice.id,
         amount=float(data.get('payment_amount')),
