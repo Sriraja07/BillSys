@@ -78,6 +78,7 @@
                              data-customer-id="{{ customer.id }}" 
                              data-customer-name="{{ customer.name }}" 
                              data-customer-mobile="{{ customer.mobile_number }}"
+                             data-customer-address="{{customer.address}}"
                              data-search-text="{{ customer.name.lower() }} {{ customer.mobile_number }}">
                             <div class="font-medium">{{ customer.name }}</div>
                             <div class="text-sm text-gray-500">{{ customer.mobile_number }}</div>
@@ -90,6 +91,7 @@
                         <div>
                             <div class="font-medium text-blue-900" id="selectedCustomerName"></div>
                             <div class="text-sm text-blue-700" id="selectedCustomerMobile"></div>
+                            <div class="text-sm text-blue-700" id="selectedCustomerAddress"></div>
                         </div>
                         <button onclick="clearCustomerSelection()" class="text-blue-600 hover:text-blue-800">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -231,6 +233,10 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <input type="email" id="customerEmail" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <textarea id="customerAddress" name="customerAddress" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter complete address"></textarea>
                     </div>
                 </form>
             </div>
@@ -451,12 +457,13 @@ customerDropdown.addEventListener('click', function(e) {
         selectCustomer(
             option.dataset.customerId,
             option.dataset.customerName,
-            option.dataset.customerMobile
+            option.dataset.customerMobile,
+            option.dataset.customerAddress
         );
     }
 });
 
-function selectCustomer(customerId, customerName, customerMobile) {
+function selectCustomer(customerId, customerName, customerMobile,customerAddress) {
     customerSelect.value = customerId;
     customerSearch.value = '';
     customerDropdown.classList.add('hidden');
@@ -464,6 +471,7 @@ function selectCustomer(customerId, customerName, customerMobile) {
     if (customerId) {
         document.getElementById('selectedCustomerName').textContent = customerName;
         document.getElementById('selectedCustomerMobile').textContent = customerMobile;
+        document.getElementById('selectedCustomerAddress').textContent=customerAddress;
         selectedCustomerDiv.classList.remove('hidden');
         customerSearch.style.display = 'none';
     } else {
@@ -656,6 +664,7 @@ function saveCustomer() {
     const Cname = document.getElementById('customerName').value;
     const Cmobile = document.getElementById('customerMobile').value;
     const Cemail = document.getElementById('customerEmail').value;
+    const Caddress = document.getElementById('customerAddress').value;
 
     if (!Cname || !Cmobile) {
         alert('Name and mobile number are required!');
@@ -664,7 +673,8 @@ function saveCustomer() {
     const customerData={
         name:Cname,
         mobile:Cmobile,
-        email:Cemail
+        email:Cemail,
+        address:Caddress
     };
 
     // Send to server
@@ -680,7 +690,7 @@ function saveCustomer() {
         console.log(data.success,"Responed")
         if (data.success) {
             closeCustomerModal();
-            selectCustomer(data.customerId, Cname, Cmobile);
+            selectCustomer(data.customerId, Cname, Cmobile,Caddress);
             alert('Customer Added successfully!');
         } else {
             alert('Error Creating Customer!');
@@ -764,9 +774,9 @@ document.getElementById('generateInvoice').addEventListener('click', function() 
                 invoiceData:invoiceData
             };
             
-            //generateInvoiceHTML();
-            //document.getElementById('invoiceModal').classList.remove('hidden');
-            //document.getElementById('printInvoice').disabled = false;
+            generateInvoiceHTML();
+            document.getElementById('invoiceModal').classList.remove('hidden');
+            document.getElementById('printInvoice').disabled = false;
             
             // Clear cart
             cart = [];
@@ -775,7 +785,7 @@ document.getElementById('generateInvoice').addEventListener('click', function() 
             document.getElementById('discountAmount').value = '';
             
             alert('Sales Added successfully!');
-            location.reload(); 
+            //location.reload(); 
         } else {
             alert('Error generating invoice!');
         }
@@ -792,6 +802,7 @@ function generateInvoiceHTML() {
     const bill_no = document.getElementById('testBill').value;
     const customerName = document.getElementById('selectedCustomerName').textContent || "Walking Customer";
     const customerMobile = document.getElementById('selectedCustomerMobile').textContent || "";
+    const customerAddress = document.getElementById('selectedCustomerAddress').textContent || "";
     const currentDate = new Date().toLocaleDateString('en-IN');
     const billQuotation = document.getElementById('billQuotation');
     let sno=1;
@@ -799,23 +810,22 @@ function generateInvoiceHTML() {
 
     
     const invoiceQHTML = `
-    <div class='print:font-sans print:font-medium'>
-        <div class="text-center mb-6 print:px-1">
+    <div class='print:font-sans print:font-medium px-1'>
+        <div class="text-center mb-3 print:px-1">
             <h1 class="text-2xl font-bold text-gray-900 zen-dots-regular">Ashwitha</h1>
             <p class="not-printtext-gray-600 text-sm">Electricals and Plumbing</p>
             <p class="not-print:text-gray-600 text-sm">13/322/A1, Vishnu Durga Fancy Store</p>
             <p class="not-print:text-gray-600 text-sm">Theni Main Road, Andipatti 625512</p>
         </div>
         
-        <div class="grid grid-cols-2 justify-between not-print:mb-6  print:border-dashed print:border-y-1 print:py-1 print:px-2">  
-            ${billQuotation.checked ? ` <div class="flex col-span-2 justify-center"><strong class="text-center">Quotation</strong></div>`:""}
+        <div class="grid grid-cols-2 justify-between not-print:mb-6  print:border-dashed print:border-y-1 print:px-2">  
+            <div class="flex col-span-2 justify-center"><strong class="text-center">Quotation</strong></div>
             <div>
                 <h3 class="font-semibold text-gray-900 text-sm">Bill To:</h3>
                 <p class="not-print:text-gray-700 text-sm">${customerName}</p>
+                <p class="not-print:text-gray-700 text-sm">${customerMobile}</p>
             </div>
             <div class="text-right text-sm">
-            ${billQuotation.checked ? "":`
-                <p><strong>Invoice No:</strong> ${bill_no}</p>`}
                 <p><strong>Date:</strong> ${currentDate}</p>
             </div>
         </div>
@@ -823,11 +833,11 @@ function generateInvoiceHTML() {
         <table class="w-full not-print:mb-6 not-print:border-collapse not-print:border not-print:border-gray-300 print:border-b-1 print:border-black print:border-dashed print:mb-1 print:text-sm">
             <thead>
                 <tr class="not-print:bg-gray-50">
-                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-left print:border-b-1 print:border-dashed">SNo</th>
-                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-left print:border-b-1 print:border-dashed">Item</th>
-                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-center print:border-b-1 print:border-dashed">Qty</th>
-                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-center print:border-b-1 print:border-dashed">Rate</th>
-                    <th class="not-print:border not-print:border-gray-300 px-1 py-1 text-center print:border-b-1 print:border-dashed">Amount</th>
+                    <th class="not-print:border not-print:border-gray-300 text-left print:border-b-1 print:border-dashed pl-2">SNo</th>
+                    <th class="not-print:border not-print:border-gray-300 text-left print:border-b-1 print:border-dashed">Item</th>
+                    <th class="not-print:border not-print:border-gray-300 text-center print:border-b-1 print:border-dashed">Qty</th>
+                    <th class="not-print:border not-print:border-gray-300 text-center print:border-b-1 print:border-dashed">Rate</th>
+                    <th class="not-print:border not-print:border-gray-300 text-center print:border-b-1 print:border-dashed pr-2">Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -835,11 +845,11 @@ function generateInvoiceHTML() {
                     const cartItem = cart.find(c => c.productId === item.product_id);
                     return `
                         <tr>
-                            <td class="border border-gray-300 px-1 py-1 print:border-0">${qsno++}</td>
-                            <td class="border border-gray-300 px-1 py-1 print:border-0"><p>${cartItem?.name || 'Unknown Product'}</p></td>
-                            <td class="border border-gray-300 px-1 py-1 text-center print:border-0">${item.quantity}</td>
-                            <td class="border border-gray-300 px-1 py-1 text-right print:border-0">${item.unit_price.toFixed(2)}</td>
-                            <td class="border border-gray-300 px-1 py-1 text-right print:border-0">${item.total_price.toFixed(2)}</td>
+                            <td class="border border-gray-300 print:border-0 text-sm pl-2">${qsno++}</td>
+                            <td class="border border-gray-300 print:border-0 text-sm"><p>${cartItem?.name || 'Unknown Product'}</p></td>
+                            <td class="border border-gray-300 text-center print:border-0 text-sm">${item.quantity}</td>
+                            <td class="border border-gray-300 text-right print:border-0 text-sm">${item.unit_price.toFixed(2)}</td>
+                            <td class="border border-gray-300 text-right print:border-0 text-sm pr-2">${item.total_price.toFixed(2)}</td>
                         </tr>
                     `;
                 }).join('')}
@@ -854,28 +864,28 @@ function generateInvoiceHTML() {
                     <span>₹${invoiceData.total_amount.toFixed(2)}</span>
                 </div>
                 ${invoiceData.discount > 0 ? `
-                    <div class="flex justify-between">
+                    <div class="flex justify-between text-sm">
                         <span>Discount:</span>
                         <span>-₹${invoiceData.discount.toFixed(2)}</span>
                     </div>
                 ` : ''}
-                <div class="flex justify-between">
+                <div class="flex justify-between text-sm">
                     <span>CGST:</span>
                     <span>₹${invoiceData.cgst.toFixed(2)}</span>
                 </div>
-                <div class="flex justify-between">
+                <div class="flex justify-between text-sm">
                     <span>SGST:</span>
                     <span>₹${invoiceData.sgst.toFixed(2)}</span>
                 </div>
-                <div class="flex justify-between font-bold text-lg not-print:border-t print:border-t print:border-dashed pt-2">
+                <div class="flex justify-between font-bold not-print:border-t print:border-t print:border-dashed pt-1">
                     <span>Total:</span>
                     <span>₹${invoiceData.final_amount.toFixed(2)}</span>
                 </div>
             </div>
         </div>
         
-        <div class="mt-6 text-center text-sm text-gray-600">
-            <p>Thank you!</p>
+        <div class="mt-3 text-center text-sm text-gray-600">
+            <p>Thank you for Business with Us</p>
         </div>
     </div
     `;
@@ -893,7 +903,7 @@ function generateInvoiceHTML() {
                 <h3 class="font-semibold text-gray-900 p-1">Bill To:</h3>
                 <p class="not-print:text-gray-700 px-1 text-sm">${customerName}</p>
                 <p class="not-print:text-gray-700 px-1 text-sm">${customerMobile}</p>
-                <p class="not-print:text-gray-700 px-1 text-sm">Andipatti, Theni</p>
+                <p class="not-print:text-gray-700 px-1 text-sm">${customerAddress}</p>
             </div>
             
             <div class="grid grid-cols-2 justify-between">
@@ -991,6 +1001,7 @@ function generateInvoiceHTML() {
 
 function closeInvoiceModal() {
     document.getElementById('invoiceModal').classList.add('hidden');
+    location.reload();
 }
 
 function getReadyPrint(){

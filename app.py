@@ -580,7 +580,8 @@ def pos_billing():
         {
             'id': c.id,
             'name': c.name,
-            'mobile_number': c.mobile_number or ''
+            'mobile_number': c.mobile_number or '',
+            'address':c.address or ''
         }
         for c in customers
     ]
@@ -603,7 +604,7 @@ def addCustomerFromPOS():
             name=data.get('name'),
             mobile_number=data.get('mobile'),
             email=data.get('email'),
-            address=""
+            address=data.get('address')
         )
     try:
         db.session.add(customer)
