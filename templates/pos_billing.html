@@ -547,19 +547,25 @@ function updateCartDisplay() {
                 <p class="text-xs text-gray-500">₹${item.price.toFixed(2)} × ${item.quantity}</p>
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="updateQuantity('${item.productId}', -1)" class="w-6 h-6 bg-red-100 text-red-600 rounded-full text-xs hover:bg-red-200">-</button>
-                <span class="w-8 text-center text-sm">${item.quantity}</span>
-                <button onclick="updateQuantity('${item.productId}', 1)" class="w-6 h-6 bg-green-100 text-green-600 rounded-full text-xs hover:bg-green-200">+</button>
+                <button onclick="updateQuantity('${item.productId}', -1,0)" class="w-6 h-6 bg-red-100 text-red-600 rounded-full text-xs hover:bg-red-200">-</button>
+                <input type="number" class="w-8 text-center text-sm" value="${item.quantity}" onchange="updateQuantity('${item.productId}', 0,this.value)">
+                <button onclick="updateQuantity('${item.productId}', 1,0)" class="w-6 h-6 bg-green-100 text-green-600 rounded-full text-xs hover:bg-green-200">+</button>
                 <button onclick="removeFromCart('${item.productId}')" class="w-6 h-6 bg-gray-100 text-red-600 rounded-full text-xs hover:bg-red-200">×</button>
             </div>
         </div>
     `).join('');
 }
 
-function updateQuantity(productId, change) {
+function updateQuantity(productId, change,quantity) {
     const item = cart.find(item => item.productId === productId);
     if (item) {
-        const newQuantity = item.quantity + change;
+        let newQuantity=null;
+        if(quantity==0){
+            newQuantity = item.quantity + change;
+        }
+        else{
+            newQuantity = quantity;
+        }
         if (newQuantity <= 0) {
             removeFromCart(productId);
         } else if (newQuantity <= item.stock) {
@@ -810,7 +816,7 @@ function generateInvoiceHTML() {
 
     
     const invoiceQHTML = `
-    <div class='print:font-sans print:font-medium px-1'>
+    <div class='print:font-sans print:font-medium px-1 print:scale-50'>
         <div class="text-center mb-3 print:px-1">
             <h1 class="text-2xl font-bold text-gray-900 zen-dots-regular">Ashwitha</h1>
             <p class="not-printtext-gray-600 text-sm">Electricals and Plumbing</p>

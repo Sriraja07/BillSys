@@ -44,7 +44,7 @@ class Product(db.Model):
     cost_price = db.Column(db.Float, nullable=False)
     selling_price = db.Column(db.Float, nullable=False)
     gst_rate = db.Column(db.Float, nullable=False)
-    stock_quantity = db.Column(db.Integer, default=0)
+    stock_quantity = db.Column(db.Float, default=0)
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
