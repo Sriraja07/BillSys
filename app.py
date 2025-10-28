@@ -45,6 +45,7 @@ class Product(db.Model):
     selling_price = db.Column(db.Float, nullable=False)
     gst_rate = db.Column(db.Float, nullable=False)
     stock_quantity = db.Column(db.Float, default=0)
+    unit =db.Column(db.String(50))
     vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -321,6 +322,7 @@ def add_product():
             cost_price=float(request.form['cost_price']),
             selling_price=float(request.form['selling_price']),
             gst_rate=float(request.form['gst_rate']),
+            unit=request.form['unit'],
             stock_quantity=int(request.form['stock_quantity']),
             vendor_id=int(request.form['vendor_id']) if request.form['vendor_id'] else None
         )
@@ -345,6 +347,7 @@ def edit_product(product_id):
         product.cost_price = float(request.form['cost_price'])
         product.selling_price = float(request.form['selling_price'])
         product.gst_rate = float(request.form['gst_rate'])
+        product.unit=request.form['unit']
         product.stock_quantity = int(request.form['stock_quantity'])
         product.vendor_id = int(request.form['vendor_id']) if request.form['vendor_id'] else None
         
@@ -571,6 +574,7 @@ def pos_billing():
             'selling_price': p.selling_price,
             'cost_price': p.cost_price,
             'gst_rate': p.gst_rate,
+            'unit':p.unit,
             'stock_quantity': p.stock_quantity,
         }
         for p in products
@@ -940,6 +944,7 @@ def add_purchase():
             'selling_price': p.selling_price,
             'cost_price': p.cost_price,
             'gst_rate': p.gst_rate,
+            'unit':p.unit,
             'stock_quantity': p.stock_quantity,
         }
         for p in products
@@ -1701,9 +1706,9 @@ def create_default_admin():
         print("Default admin created - Mobile: 9999999999, Password: admin123")
 
 if __name__ == '__main__':
-    #with app.app_context():
-        #db.create_all()
-        #create_default_admin()
+    with app.app_context():
+        db.create_all()
+        create_default_admin()
     app.run(debug=True,) 
     #webview.create_window('Electrical Billing App', app,min_size=(700,500),frameless=False,resizable=True)
     #webview.start(ssl=True, http_server=True,debug=False)

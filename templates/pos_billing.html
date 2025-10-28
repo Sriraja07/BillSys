@@ -365,7 +365,7 @@ function displayProducts() {
         productCard.dataset.stock = product.stock_quantity;
         productCard.dataset.category = product.category;
         productCard.dataset.cp = product.cost_price;
-        productCard.dataset.unit="Mtr";
+        productCard.dataset.unit=product.unit;
         
         const stockClass = product.stock_quantity <= 5 ? 'text-red-600' : 
                           product.stock_quantity <= 20 ? 'text-yellow-600' : 'text-green-600';
@@ -573,10 +573,10 @@ function updateCartDisplay() {
             </div>
             <div class="col-span-1 text-sm mx-auto">
                 <select class="outline-none ring-1 ring-sky-500 rounded-md" onchange="updateUnit('${item.productId}',this.value)">
-                    <option value="Mtr">Mtr</option>
-                    <option value="Pcs">Pcs</option>
-                    <option value="Nos">Nos</option>
-                    <option value="KGs">KGs</option>
+                    <option value="Mtr" ${item.unit=="Mtr"?"Selected":""} >Mtr</option>
+                    <option value="Pcs" ${item.unit=="Pcs"?"Selected":""} >Pcs</option>
+                    <option value="Nos" ${item.unit=="Nos"?"Selected":""} >Nos</option>
+                    <option value="KGs" ${item.unit=="KGs"?"Selected":""} >KGs</option>
                 </select>
             </div>
             <div class="col-span-1">
